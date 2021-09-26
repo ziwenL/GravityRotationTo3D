@@ -28,7 +28,6 @@ import org.jetbrains.annotations.NotNull
  */
 class GravityRotationHelper(context: Context) {
 
-
     /**
      * 加速度与磁场传感器检测值集
      */
@@ -58,30 +57,36 @@ class GravityRotationHelper(context: Context) {
                 Sensor.TYPE_ACCELEROMETER -> {
                     //加速度
                     mAccelerationValues = event.values
+                    handleAccelerometerAndMagneticData()
                 }
                 Sensor.TYPE_MAGNETIC_FIELD -> {
                     //磁场
                     mMagneticValues = event.values
+                    handleAccelerometerAndMagneticData()
                 }
             }
-            if (mAccelerationValues != null && mMagneticValues != null) {
-                if (mFrontView != null && mBackView !== null) {
-                    mFrontView?.handleSensorChangedValues(
-                        mAccelerationValues!!,
-                        mMagneticValues!!,
-                        mMaxMovingRange
-                    )
-                    mBackView?.handleSensorChangedValues(
-                        mAccelerationValues!!,
-                        mMagneticValues!!,
-                        mMaxMovingRange
-                    )
-                }
-            }
+
         }
 
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
 
+        }
+    }
+
+    private fun handleAccelerometerAndMagneticData() {
+        if (mAccelerationValues != null && mMagneticValues != null) {
+            if (mFrontView != null && mBackView !== null) {
+                mFrontView?.handleSensorChangedValues(
+                    mAccelerationValues!!,
+                    mMagneticValues!!,
+                    mMaxMovingRange
+                )
+                mBackView?.handleSensorChangedValues(
+                    mAccelerationValues!!,
+                    mMagneticValues!!,
+                    mMaxMovingRange
+                )
+            }
         }
     }
 

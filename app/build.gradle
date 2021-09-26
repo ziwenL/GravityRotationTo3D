@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.ziwenl.gravityrotationto3d"
-        minSdk 30
+        minSdk 21
         targetSdk 30
         versionCode 1
         versionName "1.0"

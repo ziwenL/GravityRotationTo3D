@@ -32,8 +32,11 @@ class GravityRotationImageView : AppCompatImageView {
         /**
          * 角度变化响应值范围，通过该范围来过滤抖动与跳动
          */
-        private const val RESPONSE_ANGLE_CHANGE_MIN = 10
-        private const val RESPONSE_ANGLE_CHANGE_MAX = 35
+        private const val RESPONSE_ANGLE_CHANGE_MIN = 8
+        private const val RESPONSE_ANGLE_CHANGE_MAX = 40
+
+        private const val DIRECTION_BACK = 1
+        private const val DIRECTION_FRONT = -1
     }
 
 
@@ -45,7 +48,7 @@ class GravityRotationImageView : AppCompatImageView {
     /**
      * 移动方向
      */
-    private var mDirection = -1
+    private var mDirection = DIRECTION_FRONT
 
 
     /**
@@ -97,7 +100,7 @@ class GravityRotationImageView : AppCompatImageView {
         super.computeScroll()
         if (mScroller.computeScrollOffset()) {
             scrollTo(mScroller.currX, mScroller.currY)
-            invalidate()
+            postInvalidate()
         }
     }
 
@@ -128,12 +131,12 @@ class GravityRotationImageView : AppCompatImageView {
          * 并根据前后景记录对应的滚动方向
          */
         if (isBack) {
-            mDirection = 1
+            mDirection = DIRECTION_BACK
             scaleType = ScaleType.CENTER_CROP
             scaleX = 1.1f
             scaleY = 1.2f
         } else {
-            mDirection = -1
+            mDirection = DIRECTION_FRONT
         }
     }
 
