@@ -1,7 +1,7 @@
 package com.ziwenl.gravityrotationto3d.ui
 
 import android.os.Bundle
-import android.widget.ImageView
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -60,6 +60,8 @@ class BannerActivity : AppCompatActivity() {
                 }
             }
         })
+        //ViewPage2 页面切换过渡效果设置
+//        viewBinding.vpMain.setPageTransformer(BannerPageTransformer())
 
         mBannerTimer.schedule(object : TimerTask() {
             override fun run() {
@@ -78,5 +80,48 @@ class BannerActivity : AppCompatActivity() {
     override fun onStop() {
         mBannerTimer.cancel()
         super.onStop()
+    }
+}
+
+/**
+ * ViewPager2 页面切换效果
+ * page 整体渐隐渐现
+ * frontView 左右缩放平移
+ */
+class BannerPageTransformer : ViewPager2.PageTransformer {
+    companion object {
+        private const val DEFAULT_MIN_ALPHA = 0.0f
+        private const val DEFAULT_MIN_SCALE = 0.5f
+    }
+
+    override fun transformPage(page: View, position: Float) {
+        val pageWidth = page.width
+        val frontView = page.findViewById<GravityRotationImageView>(R.id.iv_front)
+        when {
+            position < -1 -> {
+                page.alpha = DEFAULT_MIN_ALPHA
+            }
+            position <= 1 -> {
+                val factor: Float
+                val scale: Float
+                if (position < 0) {
+                    factor = DEFAULT_MIN_ALPHA + (1 - DEFAULT_MIN_ALPHA) * (1 + position)
+                    scale = DEFAULT_MIN_SCALE + (1 - DEFAULT_MIN_SCALE) * (1 + position)
+                } else {
+                    page.translationX = pageWidth.toFloat()
+                    factor = DEFAULT_MIN_ALPHA + (1 - DEFAULT_MIN_ALPHA) * (1 - position)
+                    scale = DEFAULT_MIN_SCALE + (1 - DEFAULT_MIN_SCALE) * (1 - position)
+                }
+                page.alpha = factor
+                page.translationX = -pageWidth * position
+
+                frontView.translationX = pageWidth * position
+                frontView.scaleX = scale
+                frontView.scaleY = scale
+            }
+            else -> {
+                page.alpha = DEFAULT_MIN_ALPHA
+            }
+        }
     }
 }
